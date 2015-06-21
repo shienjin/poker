@@ -10,8 +10,14 @@ def hand_rank(hand):
     return
 
 
+def is_straight(hand):
+    "Determine if a hand is a straight: is_straight(hand) => True/False"
+    ranks = card_ranks(hand)
+    return ranks[0] - ranks[-1] == 4 and len(set(ranks)) == 5
+
+
 def is_flush(hand):
-    "Determine if a hand is a flush: flush(suits) => True/False"
+    "Determine if a hand is a flush: is_flush(hand) => True/False"
     suits = [s for _, s in hand]
     return len(set(suits)) == 1
 
@@ -35,6 +41,7 @@ def tests():
     full_house = "KH KC KS TH TC".split()
     flush = "QC 6C 4C 3C 8C".split()
     straight = "2S 3C 4S 5H 6H".split()
+    straight_too = "2S 3C 4S 5H AH".split()
     three_kind = "JS JH JC 5C 8D".split()
     two_pair = "10S 10H 6S 6C KC".split()
     one_pair = "AH AC 8D 6H 2S".split()
@@ -43,6 +50,12 @@ def tests():
     assert is_flush(flush) == True
     assert is_flush(full_house) == False
 
-    assert poker([straight_flush, four_kind, full_house]) == straight_flush
-    assert poker([flush, straight, three_kind]) == flush
-    assert poker([two_pair, one_pair, high_card]) == two_pair
+    assert is_straight(straight_flush) == True
+    assert is_straight(straight) == True
+    assert is_straight(straight_too) == True
+    assert is_straight(flush) == False
+
+    # assert poker([straight_flush, four_kind, full_house]) == straight_flush
+    # assert poker([flush, straight, three_kind]) == flush
+    # assert poker([two_pair, one_pair, high_card]) == two_pair
+    # assert poker([straight, straight_too]) == straight
