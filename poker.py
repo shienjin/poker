@@ -1,7 +1,8 @@
 
 def poker(hands):
-    "Returns winnning hand: poker([hand,...]) => hand"
-    return max(hands, key=hand_rank)
+    "Returns winnning hand(s): poker([hand,...]) => [hand,...]"
+    max_hand = max(hands, key=hand_rank)
+    return [hand for hand in hands if hand_rank(hand) == hand_rank(max_hand)]
 
 
 def hand_rank(hand):
@@ -61,7 +62,8 @@ def card_ranks(hand):
 
 def tests():
     "Test cases"
-    royal_flush = "KS AS QS TS JS".split()
+    rf = "KS AS QS TS JS".split()
+    rf_too = "KD AD QD TD JD".split()
     straight_flush = "5C 6C 7C 8C 9C".split()
     four_kind = "AD AS AC AH 8C".split()
     four_kind_too = "KD KS KC KH 8C".split()
@@ -97,22 +99,26 @@ def tests():
     assert kind(1, high_card) == [13, 11, 10, 6, 3]
     assert kind(0, high_card) == []
 
-    assert poker([straight_flush, four_kind, full_house]) == straight_flush
-    assert poker([flush, straight, three_kind]) == flush
-    assert poker([two_pair, one_pair, high_card]) == two_pair
-    assert poker([straight, straight_too]) == straight
-    assert poker([straight_too, straight]) == straight
+    assert poker([straight_flush, four_kind, full_house]) == [straight_flush]
+    assert poker([flush, straight, three_kind]) == [flush]
+    assert poker([two_pair, one_pair, high_card]) == [two_pair]
+    assert poker([straight, straight_too]) == [straight]
+    assert poker([straight_too, straight]) == [straight]
 
-    assert poker([royal_flush, straight_flush]) == royal_flush
-    assert poker([straight_flush, royal_flush]) == royal_flush
-    assert poker([four_kind_twee, four_kind, four_kind_too]) == four_kind
-    assert poker([four_kind_too, four_kind_twee]) == four_kind_too
-    assert poker([four_kind_twee, four_kind_too]) == four_kind_too
-    assert poker([full_house, full_house_too]) == full_house_too
-    assert poker([full_house_too, full_house]) == full_house_too
-    assert poker([flush, flush_too]) == flush_too
-    assert poker([flush_too, flush]) == flush_too
-    assert poker([high_card, high_card_too]) == high_card
-    assert poker([high_card_too, high_card]) == high_card
+    assert poker([rf, straight_flush]) == [rf]
+    assert poker([straight_flush, rf]) == [rf]
+    assert poker([four_kind_twee, four_kind, four_kind_too]) == [four_kind]
+    assert poker([four_kind_too, four_kind_twee]) == [four_kind_too]
+    assert poker([four_kind_twee, four_kind_too]) == [four_kind_too]
+    assert poker([full_house, full_house_too]) == [full_house_too]
+    assert poker([full_house_too, full_house]) == [full_house_too]
+    assert poker([flush, flush_too]) == [flush_too]
+    assert poker([flush_too, flush]) == [flush_too]
+    assert poker([high_card, high_card_too]) == [high_card]
+    assert poker([high_card_too, high_card]) == [high_card]
 
-    assert poker([flush, royal_flush, straight_flush, straight, high_card, two_pair, four_kind, three_kind, one_pair]) == royal_flush
+    assert poker([flush, straight_flush, straight,
+                  high_card, two_pair, four_kind,
+                  three_kind, one_pair]) == [straight_flush]
+
+    assert sorted(poker([rf, rf_too])) == sorted([rf, rf_too])
