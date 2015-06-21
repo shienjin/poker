@@ -9,10 +9,10 @@ def hand_rank(hand):
     return
 
 
-def card_rank(hand):
+def card_ranks(hand):
     """
     Returns card rankings in reverse sorted order. Note: A = 14 or 1.
-    card_rank(hand) => [rank_1, rank_2, ...]
+    card_ranks(hand) => [rank_1, rank_2, ...]
     """
     ranks = ['--23456789TJQKA'.index(r) for r, s in hand]
     ranks.sort(reverse=True)
