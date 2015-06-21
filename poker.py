@@ -9,23 +9,23 @@ def hand_rank(hand):
     ranks = card_ranks(hand)
 
     if is_straight(hand) and is_flush(hand):    # straight flush
-        return 8
+        return (8, ranks)
     elif kind(4, hand):                         # four of a kind
-        return 7
+        return (7, kind(4, hand), kind(1, hand))
     elif kind(3, hand) and kind(2, hand):       # full house
-        return 6
+        return (6, kind(3, hand), kind(2, hand))
     elif is_flush(hand):                        # flush
-        return 5
+        return (5, ranks)
     elif is_straight(hand):                     # straight
-        return 4
+        return (4, ranks)
     elif kind(3, hand):                         # three of a kind
-        return 3
+        return (3, kind(3, hand), ranks)
     elif len(kind(2, hand)) == 2:               # two pairs
-        return 2
+        return (2, kind(2, hand), kind(1, hand))
     elif kind(2, hand):                         # one pair
-        return 1
-    else:
-        return 0                                # high card
+        return (1, kind(2, hand), kind(1, hand))
+    else:                                       # high card
+        return (0, ranks)
 
 
 def kind(n, hand):
@@ -61,16 +61,22 @@ def card_ranks(hand):
 
 def tests():
     "Test cases"
+    royal_flush = "KS AS QS TS JS".split()
     straight_flush = "5C 6C 7C 8C 9C".split()
     four_kind = "AD AS AC AH 8C".split()
+    four_kind_too = "KD KS KC KH 8C".split()
+    four_kind_twee = "KD KS KC KH 7C".split()
     full_house = "KH KC KS TH TC".split()
+    full_house_too = "AH AC AS JH JC".split()
     flush = "QC 6C 4C 3C 8C".split()
+    flush_too = "QC TC 4C 3C 8C".split()
     straight = "2S 3C 4S 5H 6H".split()
     straight_too = "2S 3C 4S 5H AH".split()
     three_kind = "JS JH JC 5C 8D".split()
     two_pair = "TS TH 6S 6C KC".split()
     one_pair = "AH AC 8D 6H 2S".split()
     high_card = "KH JS TC 6H 3D".split()
+    high_card_too = "KH JS 9C 6H 3D".split()
 
     assert is_flush(flush) == True
     assert is_flush(full_house) == False
@@ -87,7 +93,7 @@ def tests():
     assert kind(2, two_pair) == [10, 6]
     assert kind(1, two_pair) == [13]
     assert kind(2, one_pair) == [14]
-    assert kind(1, one_pair) == [8,6,2]
+    assert kind(1, one_pair) == [8, 6, 2]
     assert kind(1, high_card) == [13, 11, 10, 6, 3]
     assert kind(0, high_card) == []
 
@@ -97,3 +103,16 @@ def tests():
     assert poker([straight, straight_too]) == straight
     assert poker([straight_too, straight]) == straight
 
+    assert poker([royal_flush, straight_flush]) == royal_flush
+    assert poker([straight_flush, royal_flush]) == royal_flush
+    assert poker([four_kind_twee, four_kind, four_kind_too]) == four_kind
+    assert poker([four_kind_too, four_kind_twee]) == four_kind_too
+    assert poker([four_kind_twee, four_kind_too]) == four_kind_too
+    assert poker([full_house, full_house_too]) == full_house_too
+    assert poker([full_house_too, full_house]) == full_house_too
+    assert poker([flush, flush_too]) == flush_too
+    assert poker([flush_too, flush]) == flush_too
+    assert poker([high_card, high_card_too]) == high_card
+    assert poker([high_card_too, high_card]) == high_card
+
+    assert poker([flush, royal_flush, straight_flush, straight, high_card, two_pair, four_kind, three_kind, one_pair]) == royal_flush
