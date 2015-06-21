@@ -6,7 +6,14 @@ def poker(hands):
 
 def hand_rank(hand):
     "Returns the hand ranking: hand_rank(hand) => ranking"
+    ranks = card_ranks(hand)
     return
+
+
+def is_flush(hand):
+    "Determine if a hand is a flush: flush(suits) => True/False"
+    suits = [s for _, s in hand]
+    return len(set(suits)) == 1
 
 
 def card_ranks(hand):
@@ -32,6 +39,10 @@ def tests():
     two_pair = "10S 10H 6S 6C KC".split()
     one_pair = "AH AC 8D 6H 2S".split()
     high_card = "KH JS 10C 6H 3D".split()
+
+    assert is_flush(flush) == True
+    assert is_flush(full_house) == False
+
     assert poker([straight_flush, four_kind, full_house]) == straight_flush
     assert poker([flush, straight, three_kind]) == flush
     assert poker([two_pair, one_pair, high_card]) == two_pair
